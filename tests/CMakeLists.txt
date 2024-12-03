@@ -11,6 +11,6 @@ enable_testing()
 
 add_executable(TestRunner tuple_test.cpp)
 target_link_libraries(TestRunner GTest::gtest_main tuple utils)
-target_include_directories(TestRunner PRIVATE ${PROJECT_SOURCE_DIR}/includes)
+target_include_directories(TestRunner PRIVATE ${PROJECT_SOURCE_DIR}/include)
 include(GoogleTest)
 gtest_discover_tests(TestRunner)

@@ -17,6 +17,9 @@ public:
     float w() const { return _w; }
 
     float magnitude() const;
+    Tuple normalize() const;
+    float dot(const Tuple t) const;
+    Tuple cross(const Tuple t) const;
     
 };
 
@@ -26,4 +29,5 @@ Tuple operator+(const Tuple lhs, const Tuple rhs);
 Tuple operator-(const Tuple lhs, const Tuple rhs);
 Tuple operator-(const Tuple t);
 Tuple operator*(const Tuple lhs, float s);
-Tuple operator/(const Tuple lsh, float d);
+Tuple operator/(const Tuple lhs, float d);
+float operator*(const Tuple lhs, const Tuple rhs);

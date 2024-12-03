@@ -105,3 +105,32 @@ TEST(TupleTest, TestMagnitude) {
     magnitude = vect.magnitude();
     EXPECT_FLOAT_EQ(magnitude, std::sqrt(14));
 }
+
+TEST(TupleTest, TestNormalization) {
+    auto vect{Tuple::Vector(4.0f, 0.0f, 0.0f)};
+    auto expected{Tuple::Vector(1.0f, 0.0f, 0.0f)};
+    auto result{vect.normalize()};
+    EXPECT_TRUE(expected == result);
+
+    vect = Tuple::Vector(1.0f, 2.0f, 3.0f);
+    expected = Tuple::Vector(1.0f/std::sqrt(14.0f), 2.0f/std::sqrt(14.0f), 3.0f/std::sqrt(14.0f));
+    result = vect.normalize();
+    EXPECT_TRUE(expected == result);
+}
+
+TEST(TupleTest, TestDotProduct) {
+    auto a = Tuple::Vector(1.0f, 2.0f, 3.0f);
+    auto b = Tuple::Vector(2.0f, 3.0f, 4.0f);
+    EXPECT_FLOAT_EQ(a.dot(b), 20.0f);
+}
+
+TEST(TupleTest, TestCrossProduct) {
+    auto a = Tuple::Vector(1.0f, 2.0f, 3.0f);
+    auto b = Tuple::Vector(2.0f, 3.0f, 4.0f);
+    auto expected = Tuple::Vector(-1.0f, 2.0f, -1.0f);
+    auto result = a.cross(b);
+    EXPECT_TRUE(expected == result);
+    expected = Tuple::Vector(1.0f, -2.0f, 1.0f);
+    result = b.cross(a);
+    EXPECT_TRUE(expected == result);
+}

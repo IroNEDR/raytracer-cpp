@@ -22,6 +22,23 @@ float Tuple::magnitude() const {
     return std::sqrt(_x*_x + _y * _y + _z * _z + _w * _w);
 }
 
+float Tuple::dot(const Tuple t) const {
+    return _x * t.x() + _y * t.y() + _z * t.z() + _w * t._w;
+}
+
+Tuple Tuple::cross(const Tuple t) const {
+    return Tuple::Vector(
+        _y*t.z() - _z * t.y(),
+        _z * t.x() - _x * t.z(),
+        _x * t.y() - _y * t.x()
+    );
+}
+
+Tuple Tuple::normalize() const {
+    return Tuple(_x / this->magnitude(), _y / this->magnitude(),
+                 _z / this->magnitude(), _w / this->magnitude());
+}
+
 
 bool operator==(const Tuple lhs, const Tuple rhs) {
     return almost_eq(lhs.x(), rhs.x(), EPSILON) &&

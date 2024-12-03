@@ -11,9 +11,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-include_directories(includes)
-add_library(utils src/utils.cpp includes/utils.hpp)
-add_library(tuple src/tuple.cpp includes/tuple.hpp)
+include_directories(include)
+add_library(utils src/utils.cpp include/utils.hpp)
+add_library(tuple src/tuple.cpp include/tuple.hpp)
 add_executable(rt apps/main.cpp)
 
 add_subdirectory(tests)

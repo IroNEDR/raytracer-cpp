@@ -24,10 +24,10 @@ public:
 };
 
 
-bool operator==(const Tuple lhs, const Tuple rhs);
-Tuple operator+(const Tuple lhs, const Tuple rhs);
-Tuple operator-(const Tuple lhs, const Tuple rhs);
-Tuple operator-(const Tuple t);
-Tuple operator*(const Tuple lhs, float s);
-Tuple operator/(const Tuple lhs, float d);
-float operator*(const Tuple lhs, const Tuple rhs);
+bool operator==(const Tuple &lhs, const Tuple &rhs);
+Tuple operator+(const Tuple &lhs, const Tuple &rhs);
+Tuple operator-(const Tuple &lhs, const Tuple &rhs);
+Tuple operator-(const Tuple &t);
+Tuple operator*(const Tuple &lhs, float s);
+Tuple operator/(const Tuple &lhs, float d);
+float operator*(const Tuple &lhs, const Tuple &rhs);

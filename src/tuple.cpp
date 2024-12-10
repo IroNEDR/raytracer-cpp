@@ -40,30 +40,30 @@ Tuple Tuple::normalize() const {
 }
 
 
-bool operator==(const Tuple lhs, const Tuple rhs) {
+bool operator==(const Tuple &lhs, const Tuple &rhs) {
     return almost_eq(lhs.x(), rhs.x(), EPSILON) &&
         almost_eq(lhs.y(), rhs.y(), EPSILON) &&
         almost_eq(lhs.z(), rhs.z(), EPSILON);
 }
 
-Tuple operator+(const Tuple lhs, const Tuple rhs) {
+Tuple operator+(const Tuple &lhs, const Tuple &rhs) {
     return Tuple(lhs.x() + rhs.x(), lhs.y() + rhs.y(),
                  lhs.z() + rhs.z(), lhs.w() + rhs.w()); 
 }
 
-Tuple operator-(const Tuple lhs, const Tuple rhs) {
+Tuple operator-(const Tuple &lhs, const Tuple &rhs) {
     return Tuple(lhs.x() - rhs.x(), lhs.y() - rhs.y(),
                  lhs.z() - rhs.z(), lhs.w() - rhs.w());
 }
 
-Tuple operator-(const Tuple t) {
+Tuple operator-(const Tuple &t) {
     return Tuple(-t.x(), -t.y(), -t.z(), -t.w());
 }
 
-Tuple operator*(const Tuple lhs, float s) {
+Tuple operator*(const Tuple &lhs, float s) {
     return Tuple(lhs.x()*s, lhs.y()*s, lhs.z()*s, lhs.w()*s);
 }
 
-Tuple operator/(const Tuple lhs, float d) {
+Tuple operator/(const Tuple &lhs, float d) {
     return Tuple(lhs.x()/d, lhs.y()/d, lhs.z()/d, lhs.w()/d);
 }

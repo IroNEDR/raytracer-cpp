@@ -9,8 +9,8 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 
-add_executable(TestRunner tuple_test.cpp color_test.cpp canvas_test.cpp)
-target_link_libraries(TestRunner GTest::gtest_main tuple utils color canvas)
+add_executable(TestRunner tuple_test.cpp color_test.cpp canvas_test.cpp matrix_test.cpp)
+target_link_libraries(TestRunner GTest::gtest_main tuple utils color canvas matrix)
 target_include_directories(TestRunner PRIVATE ${PROJECT_SOURCE_DIR}/include)
 include(GoogleTest)
 gtest_discover_tests(TestRunner)

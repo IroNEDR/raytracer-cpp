@@ -16,7 +16,11 @@ add_library(utils src/utils.cpp include/utils.hpp)
 add_library(tuple src/tuple.cpp include/tuple.hpp)
 add_library(color src/color.cpp include/color.hpp)
 add_library(canvas src/canvas.cpp include/canvas.hpp)
-add_executable(rt apps/main.cpp)
+add_library(matrix INTERFACE include/matrix.hpp)
+add_executable(rt_default apps/default/main.cpp)
+add_executable(rt_projectile apps/projectile/main.cpp)
+target_link_libraries(rt_projectile tuple utils color canvas)
+target_include_directories(rt_projectile PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 add_subdirectory(tests)
 

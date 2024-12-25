@@ -1,7 +1,6 @@
 #include "tuple.hpp"
 #include "canvas.hpp"
 #include <fstream>
-#include <iostream>
 
 struct Projectile {
     Tuple position;    
@@ -39,10 +38,7 @@ int main() {
         x = static_cast<int>(p.position.x());
         y = static_cast<int>(p.position.y());
         if ( x < c.width() && y < c.height() && x >= 0 && y >= 0) {
-            std::cout << "write x: " << p.position.x() << "write y: " << p.position.y() << std::endl;
             c.write_pixel(x, c.height() - y, Color(1.0f, 0.0f, 0.0f));
-        } else {
-            std::cout << "x: " << p.position.x() << " y: " << p.position.y() << std::endl;
         }
     }
 

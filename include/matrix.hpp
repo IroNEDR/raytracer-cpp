@@ -2,6 +2,7 @@
 #include <array>
 #include <concepts>
 #include <cstddef>
+#include <format>
 #include <initializer_list>
 #include <iostream>
 #include <stdexcept>
@@ -70,6 +71,19 @@ public:
         }
     }
 
+    Matrix<T, Rows, Cols> identity() {
+        if (Rows != Cols) {
+             throw std::domain_error(
+                std::format("identity can only be called on nxn matrices."
+                            "The dimensions here are {} {}", Rows, Cols));
+        }
+        Matrix<T, Rows, Cols> _identity;
+        for (int i = 0; i < Rows; ++i) {
+            _identity[i][i] = 1;
+        }
+        return _identity;
+    }
+
     bool operator==(const Matrix& rhs) const {
         for(int i = 0; i < Rows; ++i) {
             for(int j = 0; j < Cols; ++j) {
@@ -92,9 +106,9 @@ public:
         return false;
     }
 
-    template<int N>
     // This ensures that the number of columns in the first matrix is equal to the number of rows in the second matrix
     // and the number of columns in the second matrix can be different but can be known at compile time
+    template<int N>
     Matrix<T, Rows, N> operator*(const Matrix<T, Cols, N>& rhs) {
         Matrix<T, Rows, N> m;
 

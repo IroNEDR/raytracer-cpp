@@ -79,5 +79,12 @@ TEST(MatrixTest, MultiplicationWithTuple) {
     auto result = m * t;
 
     EXPECT_TRUE(result == expected);
+}
 
+TEST(MatrixTest, IdentityMatrix) {
+    Matrix<int,3,3> m;
+    m = {1,2,3,4,5,6,7,8,9};
+    const auto i = m.identity();
+    const auto result = m * i;
+    EXPECT_TRUE(result == m);
 }

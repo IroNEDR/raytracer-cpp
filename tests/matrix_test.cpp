@@ -128,8 +128,18 @@ TEST(MatrixTest, Transpose) {
 TEST(MatrixTest, Determinant) {
     Matrix<int,2,2> m;
     m = {1,5,-3,2};
-    const auto result = m.determinant();
+    auto result = m.determinant();
     EXPECT_EQ(result, 17);
+
+    Matrix<int, 3, 3> n;
+    n = {1,2,6,-5,8,-4,2,6,4};
+    auto result2 = n.determinant();
+    EXPECT_EQ(result2, -196);
+
+    Matrix<int, 4, 4> b;
+    b = {-2, -8, 3, 5, -3, 1, 7, 3, 1, 2, -9, 6, -6, 7, 7, -9};
+    auto result3 = b.determinant();
+    EXPECT_EQ(result3, -4071);
 }
 
 TEST(MatrixTest, Submatrix) {
@@ -154,4 +164,35 @@ TEST(MatrixTest, Minor) {
     m = {3,5,0,2,-2,-7,6,-1,5};
     const auto result = m.minor(1, 0);
     EXPECT_EQ(result, 25);
+}
+
+
+TEST(MatrixTest, Cofactor) {
+    Matrix<int,3,3> m;
+    m = {3,5,0,2,-1,-7,6,-1,5};
+    auto result = m.cofactor(0, 0);
+    EXPECT_EQ(result, -12);
+    result = m.cofactor(1, 0);
+    EXPECT_EQ(result, -25);
+
+    Matrix<int, 3, 3> n;
+    n = {1,2,6,-5,8,-4,2,6,4};
+    result = n.cofactor(0, 1);
+    EXPECT_EQ(result, 12);
+
+    result = n.cofactor(0, 2);
+    EXPECT_EQ(result, -46);
+    result = n.cofactor(0, 1);
+    EXPECT_EQ(result, 12);
+
+    Matrix<int, 4, 4> b;
+    b = {-2, -8, 3, 5, -3, 1, 7, 3, 1, 2, -9, 6, -6, 7, 7, -9};
+    result = b.cofactor(0, 0);
+    EXPECT_EQ(result, 690);
+    result = b.cofactor(0, 1);
+    EXPECT_EQ(result, 447);
+    result = b.cofactor(0, 2);
+    EXPECT_EQ(result, 210);
+    result = b.cofactor(0, 3);
+    EXPECT_EQ(result, 51);
 }

@@ -10,7 +10,7 @@
 template <typename T>
 concept numeric = std::integral<T> or std::floating_point<T>;
 
-template<numeric T, int Rows, int Cols>
+template<numeric T, unsigned Rows, unsigned Cols>
 class Matrix {
 private:
     std::array<std::array<T, Cols>, Rows> _data;
@@ -22,19 +22,6 @@ public:
         }
     }
 
-    Matrix& operator=(std::initializer_list<T> values) {
-        if(values.size() > Rows * Cols) {
-            throw std::invalid_argument("error: number of values does not match matrix size.");
-        }
-
-        auto val = values.begin();
-        for(int i = 0; i < Rows; ++i) {
-            for(int j = 0; j < Cols; ++j) {
-                _data[i][j] = *val++;
-            }
-        }
-        return *this;
-    }
 
     constexpr std::size_t size() const {
         return Rows * Cols;
@@ -48,19 +35,6 @@ public:
         return Cols;
     }
 
-    const std::array<T, Cols> operator[](int row) const {
-        if (row < 0 || row >= Rows) {
-            throw std::out_of_range("index out of bounds");
-        }
-        return _data[row];
-    }
-    
-    std::array<T, Cols>& operator[](int row) {
-        if (row < 0 || row >= Rows) {
-            throw std::out_of_range("index out of bounds");
-        }
-        return _data[row];
-    }
     
     void print() const {
         for(const auto& row : _data) {
@@ -77,17 +51,34 @@ public:
                 std::format("determinant can only be called on nxn matrices."
                             "The dimensions here are {} {}", Rows, Cols));
         }
-        return _data[0][0] * _data[1][1] - _data[0][1] * _data[1][0];
+
+        if constexpr ( Rows == 2) {
+            return _data[0][0] * _data[1][1] - _data[0][1] * _data[1][0];
+        } else {
+
+            T det {0};
+
+            for(int i = 0; i < Cols; ++i) {
+                det += _data[0][i] * this->cofactor(0, i); 
+            }
+            return det;
+        }
+
     }
 
-    Matrix<T, Rows - 1, Cols -1> submatrix(int row, int col) const {
+//    template <unsigned SubRows = Rows - 1, unsigned SubCols = Cols - 1>
+    Matrix<T, Rows -1, Cols -1> submatrix(int row, int col) const {
         if(row < 0 || row >= Rows || col < 0 || col >= Cols) {
             throw std::out_of_range("index out of bounds");
+        }
+
+        if(Rows < 1 || Cols < 1) {
+            throw std::domain_error("cannot create submatrix from an empty matrix");
         }
         if(Rows == 1 || Cols == 1) {
             throw std::domain_error("cannot create submatrix from a 1x1 matrix");
         }
-        Matrix<T, Rows -1, Cols -1> sm;
+        Matrix<T, Rows -1 , Cols - 1> sm;
         for(int r = 0, i = 0; r < Rows; ++r) {
             if(r == row) {
                 continue;
@@ -106,8 +97,7 @@ public:
 
 
     T minor(int r, int c) const {
-        const auto sm = this->submatrix(r, c);
-        return sm.determinant();
+        return this->submatrix(r, c).determinant();
     }
 
     Matrix<T, Rows, Cols> identity() const {
@@ -131,6 +121,43 @@ public:
             }
         }
         return transposed;
+    }
+
+    T cofactor(int row, int col) const {
+        const auto minor = this->minor(row, col);
+        const auto val = row + col;
+        if(val%2 == 0) {
+            return minor;
+        }
+        return -1 * minor;
+    }
+
+    Matrix& operator=(std::initializer_list<T> values) {
+        if(values.size() > Rows * Cols) {
+            throw std::invalid_argument("error: number of values does not match matrix size.");
+        }
+
+        auto val = values.begin();
+        for(int i = 0; i < Rows; ++i) {
+            for(int j = 0; j < Cols; ++j) {
+                _data[i][j] = *val++;
+            }
+        }
+        return *this;
+    }
+
+    const std::array<T, Cols> operator[](int row) const {
+        if (row < 0 || row >= Rows) {
+            throw std::out_of_range("index out of bounds");
+        }
+        return _data[row];
+    }
+    
+    std::array<T, Cols>& operator[](int row) {
+        if (row < 0 || row >= Rows) {
+            throw std::out_of_range("index out of bounds");
+        }
+        return _data[row];
     }
 
     bool operator==(const Matrix& rhs) const {
@@ -157,7 +184,7 @@ public:
 
     // This ensures that the number of columns in the first matrix is equal to the number of rows in the second matrix
     // and the number of columns in the second matrix can be different but can be known at compile time
-    template<int N>
+    template<unsigned N>
     Matrix<T, Rows, N> operator*(const Matrix<T, Cols, N>& rhs) const {
         Matrix<T, Rows, N> m;
 

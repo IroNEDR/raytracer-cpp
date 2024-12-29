@@ -71,7 +71,46 @@ public:
         }
     }
 
-    Matrix<T, Rows, Cols> identity() {
+    T determinant() const {
+        if(Rows != Cols) {
+            throw std::domain_error(
+                std::format("determinant can only be called on nxn matrices."
+                            "The dimensions here are {} {}", Rows, Cols));
+        }
+        return _data[0][0] * _data[1][1] - _data[0][1] * _data[1][0];
+    }
+
+    Matrix<T, Rows - 1, Cols -1> submatrix(int row, int col) const {
+        if(row < 0 || row >= Rows || col < 0 || col >= Cols) {
+            throw std::out_of_range("index out of bounds");
+        }
+        if(Rows == 1 || Cols == 1) {
+            throw std::domain_error("cannot create submatrix from a 1x1 matrix");
+        }
+        Matrix<T, Rows -1, Cols -1> sm;
+        for(int r = 0, i = 0; r < Rows; ++r) {
+            if(r == row) {
+                continue;
+            }
+            for(int c = 0, j = 0; c < Cols; ++c) {
+                if(c == col) {
+                    continue;
+                }
+                sm[i][j] = _data[r][c];
+                ++j;
+            }
+            ++i;
+        }
+        return sm;
+    }
+
+
+    T minor(int r, int c) const {
+        const auto sm = this->submatrix(r, c);
+        return sm.determinant();
+    }
+
+    Matrix<T, Rows, Cols> identity() const {
         if (Rows != Cols) {
              throw std::domain_error(
                 std::format("identity can only be called on nxn matrices."
@@ -82,6 +121,16 @@ public:
             _identity[i][i] = 1;
         }
         return _identity;
+    }
+
+    Matrix<T, Cols, Rows> transpose() const {
+        Matrix<T, Cols, Rows> transposed;
+        for(int i = 0; i < Rows; ++i) {
+            for(int j = 0; j < Cols; ++j) {
+                transposed[j][i] =_data[i][j]; 
+            }
+        }
+        return transposed;
     }
 
     bool operator==(const Matrix& rhs) const {
@@ -109,7 +158,7 @@ public:
     // This ensures that the number of columns in the first matrix is equal to the number of rows in the second matrix
     // and the number of columns in the second matrix can be different but can be known at compile time
     template<int N>
-    Matrix<T, Rows, N> operator*(const Matrix<T, Cols, N>& rhs) {
+    Matrix<T, Rows, N> operator*(const Matrix<T, Cols, N>& rhs) const {
         Matrix<T, Rows, N> m;
 
         for(int i {0}; i < Rows; ++i) {
@@ -122,7 +171,7 @@ public:
         return m;
     }
     
-    Tuple operator*(const Tuple& t) {
+    Tuple operator*(const Tuple& t) const {
         if(Cols != 4) {
             throw std::invalid_argument("error: matrix must have 4 columns to multiply with the 4 element tuple");
         }

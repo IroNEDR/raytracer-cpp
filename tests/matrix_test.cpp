@@ -130,16 +130,25 @@ TEST(MatrixTest, Determinant) {
     m = {1,5,-3,2};
     auto result = m.determinant();
     EXPECT_EQ(result, 17);
+    EXPECT_TRUE(m.is_invertible());
 
     Matrix<int, 3, 3> n;
     n = {1,2,6,-5,8,-4,2,6,4};
     auto result2 = n.determinant();
     EXPECT_EQ(result2, -196);
+    EXPECT_TRUE(n.is_invertible());
 
     Matrix<int, 4, 4> b;
     b = {-2, -8, 3, 5, -3, 1, 7, 3, 1, 2, -9, 6, -6, 7, 7, -9};
     auto result3 = b.determinant();
     EXPECT_EQ(result3, -4071);
+    EXPECT_TRUE(b.is_invertible());
+
+    Matrix<int, 4, 4> c;
+    c = {-4, 2, -2, -3, 9, 6, 2, 6, 0, -5, 1, -5, 0, 0, 0, 0};
+    auto result4 = c.determinant();
+    EXPECT_EQ(result4, 0);
+    EXPECT_FALSE(c.is_invertible());
 }
 
 TEST(MatrixTest, Submatrix) {
@@ -195,4 +204,78 @@ TEST(MatrixTest, Cofactor) {
     EXPECT_EQ(result, 210);
     result = b.cofactor(0, 3);
     EXPECT_EQ(result, 51);
+}
+
+
+TEST(MatrixTest, Inverse) {
+    Matrix<float, 4, 4> m;
+    m = { 
+        -5.0f, 2.0f, 6.0f, -8.0f,
+        1.0f, -5.0f, 1.0f, 8.0f,
+        7.0f, 7.0f, -6.0f, -7.0f,
+        1.0f, -3.0f, 7.0f, 4.0f
+    };
+    
+    const auto det = m.determinant();
+    EXPECT_FLOAT_EQ(det, 532.0f);
+    
+    auto cof = m.cofactor(2, 3);
+    EXPECT_FLOAT_EQ(cof, -160.0f);
+    
+    const auto inv = m.inverse();
+    EXPECT_FLOAT_EQ(inv[3][2], -160.0f/532.0f);
+    
+    cof = m.cofactor(3, 2);
+    
+    EXPECT_FLOAT_EQ(105.0f, cof);
+    EXPECT_FLOAT_EQ(inv[2][3], 105.0f/532.0f);
+    
+    Matrix<float,4,4> inv_expect;
+
+    inv_expect = {
+         0.21805,  0.45113,  0.24060, -0.04511,
+        -0.80827, -1.45677, -0.44361, 0.52068,
+        -0.07895, -0.22368, -0.05263, 0.19737,
+        -0.52256, -0.81391, -0.30075, 0.30639
+    };
+
+    EXPECT_TRUE(inv == inv_expect);
+
+
+    Matrix<int, 4,4> n;
+    n = {8, -5, 9, 2, 7, 5, 6, 1, -6, 0, 9, 6, -3, 0, -9, -4};
+    const auto inv2 = n.inverse();
+    Matrix<float, 4,4> inv_expect2;
+    inv_expect2 = {
+        -0.15385f, -0.15385f, -0.28205f, -0.53846f,
+        -0.07692f, 0.12308f, 0.02564f, 0.03077f,
+        0.35897f, 0.35897f, 0.43590f, 0.92308f,
+        -0.69231f, -0.69231f, -0.76923f, -1.92308f
+    };
+
+
+    EXPECT_TRUE(inv2 == inv_expect2);
+
+
+    Matrix<int, 4,4> o;
+    o = {9, 3, 0, 9, -5, -2, -6, -3, -4, 9, 6, 4, -7, 6, 6, 2};
+    const auto inv3 = o.inverse();
+    Matrix<float, 4,4> inv_expect3;
+    inv_expect3 = {
+        -0.04074f, -0.07778f, 0.14444f, -0.22222f,
+        -0.07778f, 0.03333f, 0.36667f, -0.33333f,
+        -0.02901f, -0.14630f, -0.10926f, 0.12963f,
+        0.17778f, 0.06667, -0.26667f, 0.33333f
+    };
+
+    EXPECT_TRUE(inv3 == inv_expect3);
+
+    Matrix<int, 4,4> p;
+    p = {3, -9, 7, 3, 3, -8, 2, -9, -4, 4, 4, 1, -6, 5, -1, 1};
+    Matrix<int,4,4> b;
+    b ={ 8, 2,2,2, 3, -1, 7, 0, 7, 0, 5, 4, 6, -2, 0, 5};
+    const auto c = p * b;
+    const auto d = c * b.inverse();
+    EXPECT_TRUE(d == p);
+
 }

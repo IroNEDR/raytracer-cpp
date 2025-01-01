@@ -1,11 +1,13 @@
 #include "tuple.hpp"
+#include "utils.hpp"
 #include <array>
 #include <concepts>
 #include <cstddef>
 #include <format>
-#include <initializer_list>
 #include <iostream>
+#include <initializer_list>
 #include <stdexcept>
+#include <type_traits>
 
 template <typename T>
 concept numeric = std::integral<T> or std::floating_point<T>;
@@ -45,6 +47,10 @@ public:
         }
     }
 
+    bool is_invertible() const {
+        return this->determinant() != 0;
+    }
+
     T determinant() const {
         if(Rows != Cols) {
             throw std::domain_error(
@@ -66,18 +72,14 @@ public:
 
     }
 
-//    template <unsigned SubRows = Rows - 1, unsigned SubCols = Cols - 1>
     Matrix<T, Rows -1, Cols -1> submatrix(int row, int col) const {
         if(row < 0 || row >= Rows || col < 0 || col >= Cols) {
             throw std::out_of_range("index out of bounds");
         }
-
-        if(Rows < 1 || Cols < 1) {
-            throw std::domain_error("cannot create submatrix from an empty matrix");
-        }
         if(Rows == 1 || Cols == 1) {
             throw std::domain_error("cannot create submatrix from a 1x1 matrix");
         }
+
         Matrix<T, Rows -1 , Cols - 1> sm;
         for(int r = 0, i = 0; r < Rows; ++r) {
             if(r == row) {
@@ -132,6 +134,23 @@ public:
         return -1 * minor;
     }
 
+    Matrix<float, Rows, Cols> inverse() const {
+        if(!this->is_invertible()) {
+            throw std::domain_error("matrix is not invertible");
+        }
+        Matrix<float,Rows, Cols> m;
+        for(int i = 0; i < Rows; ++i) {
+            for(int j = 0; j < Cols; ++j) {
+                const float cof = static_cast<float>(this->cofactor(i, j));
+                const float det = static_cast<float>(this->determinant());
+                // switch row and col to accomplish transpose
+                m[j][i] = cof / det;
+            }
+        }
+
+        return m;
+    }
+
     Matrix& operator=(std::initializer_list<T> values) {
         if(values.size() > Rows * Cols) {
             throw std::invalid_argument("error: number of values does not match matrix size.");
@@ -160,18 +179,26 @@ public:
         return _data[row];
     }
 
-    bool operator==(const Matrix& rhs) const {
+    template<numeric U>
+    bool operator==(const Matrix<U, Rows, Cols>& rhs) const {
         for(int i = 0; i < Rows; ++i) {
             for(int j = 0; j < Cols; ++j) {
-                if(_data[i][j] != rhs[i][j]) {
-                    return false;
+                if constexpr (std::is_floating_point_v<T> || std::is_floating_point_v<U>)
+                {
+                    if(!almost_eq(_data[i][j], rhs[i][j], EPSILON)) {
+                        return false;
+                    }
+                } else {
+                    if(_data[i][j] != rhs[i][j]) {
+                        return false;
+                    }
                 }
             }
         }
         return true;
     }
 
-    bool operator !=(const Matrix& rhs) const {
+    bool operator!=(const Matrix& rhs) const {
         for(int i = 0; i < Rows; ++i) {
             for(int j = 0; j < Cols; ++j) {
                 if(_data[i][j] != rhs[i][j]) {
@@ -184,14 +211,15 @@ public:
 
     // This ensures that the number of columns in the first matrix is equal to the number of rows in the second matrix
     // and the number of columns in the second matrix can be different but can be known at compile time
-    template<unsigned N>
-    Matrix<T, Rows, N> operator*(const Matrix<T, Cols, N>& rhs) const {
-        Matrix<T, Rows, N> m;
+    template<unsigned N, numeric U>
+    auto operator*(const Matrix<U, Cols, N>& rhs) const {
+        using ResultType = typename std::common_type<T, U>::type;
+        Matrix<ResultType, Rows, N> m;
 
         for(int i {0}; i < Rows; ++i) {
             for(int j {0}; j < N; ++j) {
                 for(int k {0}; k < Cols; ++k) {
-                    m[i][j] += _data[i][k]* rhs[k][j];
+                    m[i][j] += static_cast<ResultType>(_data[i][k]) * static_cast<ResultType>(rhs[k][j]);
                 }
             }
         } 

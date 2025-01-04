@@ -5,6 +5,7 @@ private:
     float _x,_y,_z,_w;
 public:
     Tuple(const float x, const float y, const float z, const float w):_x(x),_y(y),_z(z),_w(w){}
+    Tuple() = default;
 
     static Tuple Point(const float x, const float y, const float z);
     static Tuple Vector(const float x, const float y, const float z);

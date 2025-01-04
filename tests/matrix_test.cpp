@@ -2,7 +2,7 @@
 #include <matrix.hpp>
 #include <unistd.h>
 
-TEST(MatrixTest, EmptyInitialization) {
+TEST(Matrix, EmptyInitialization) {
     Matrix<float, 2, 2> m; 
     Matrix<float, 3, 2> n;
     n = {1.0f, 3.4f, 5.1f, 0.0f, 2.0f, 1.4f};
@@ -14,7 +14,7 @@ TEST(MatrixTest, EmptyInitialization) {
     EXPECT_EQ(cols, 2);
 }
 
-TEST(MatrixTest, BracketOperator) {
+TEST(Matrix, BracketOperator) {
     Matrix<float, 2, 2> m; 
     m = {1.0f, 2.0f, 3.0f, 4.0f};
 
@@ -29,7 +29,7 @@ TEST(MatrixTest, BracketOperator) {
 }
 
 
-TEST(MatrixTest, EqualityOperators) {
+TEST(Matrix, EqualityOperators) {
     Matrix<int, 3, 3> m;
     Matrix<int, 3, 3> n;
     Matrix<float, 3, 3> p;
@@ -51,7 +51,7 @@ TEST(MatrixTest, EqualityOperators) {
 }
 
 
-TEST(MatrixTest, Multiplication) {
+TEST(Matrix, Multiplication) {
     Matrix<int, 4, 4> m;
     Matrix<int, 4, 4> n;
     Matrix<int, 4, 3> x;
@@ -71,17 +71,18 @@ TEST(MatrixTest, Multiplication) {
 }
 
 
-TEST(MatrixTest, MultiplicationWithTuple) {
+TEST(Matrix, MultiplicationTuple) {
     Matrix<float, 4, 4> m;
     m = {1.0f,2.0f,3.0f,4.0f,2.0f,4.0f,4.0f,2.0f,8.0f,6.0f,4.0f,1.0f,0.0f,0.0f,0.0f,1.0f};
     Tuple t = Tuple::Point(1.0f, 2.0f, 3.0f);
     Tuple expected = Tuple::Point(18.0f, 24.0f, 33.0f);
     auto result = m * t;
-
+    auto result2 = t * m;
     EXPECT_TRUE(result == expected);
+    EXPECT_TRUE(result != result2);
 }
 
-TEST(MatrixTest, IdentityMatrix) {
+TEST(Matrix, IdentityMatrix) {
     Matrix<int,3,3> m;
     m = {1,2,3,4,5,6,7,8,9};
     const auto i = m.identity();
@@ -90,7 +91,7 @@ TEST(MatrixTest, IdentityMatrix) {
 }
 
 
-TEST(MatrixTest, Transpose) {
+TEST(Matrix, Transpose) {
     Matrix<int,2,2> m;
     m = {1,2,3,4};
     const auto result = m.transpose();
@@ -125,7 +126,7 @@ TEST(MatrixTest, Transpose) {
 }
 
 
-TEST(MatrixTest, Determinant) {
+TEST(Matrix, Determinant) {
     Matrix<int,2,2> m;
     m = {1,5,-3,2};
     auto result = m.determinant();
@@ -151,7 +152,7 @@ TEST(MatrixTest, Determinant) {
     EXPECT_FALSE(c.is_invertible());
 }
 
-TEST(MatrixTest, Submatrix) {
+TEST(Matrix, Submatrix) {
     Matrix<int,3,3> m;
     m = { 1, 5, 0, -3, 2, 7, 0, 6, -3};
     const auto result = m.submatrix(0, 2);
@@ -168,7 +169,7 @@ TEST(MatrixTest, Submatrix) {
 }
 
 
-TEST(MatrixTest, Minor) {
+TEST(Matrix, Minor) {
     Matrix<int,3,3> m;
     m = {3,5,0,2,-2,-7,6,-1,5};
     const auto result = m.minor(1, 0);
@@ -176,7 +177,7 @@ TEST(MatrixTest, Minor) {
 }
 
 
-TEST(MatrixTest, Cofactor) {
+TEST(Matrix, Cofactor) {
     Matrix<int,3,3> m;
     m = {3,5,0,2,-1,-7,6,-1,5};
     auto result = m.cofactor(0, 0);
@@ -207,7 +208,7 @@ TEST(MatrixTest, Cofactor) {
 }
 
 
-TEST(MatrixTest, Inverse) {
+TEST(Matrix, Inverse) {
     Matrix<float, 4, 4> m;
     m = { 
         -5.0f, 2.0f, 6.0f, -8.0f,

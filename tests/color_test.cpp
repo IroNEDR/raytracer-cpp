@@ -2,7 +2,7 @@
 #include <color.hpp>
 
 
-TEST(ColorTest, Creation) {
+TEST(Color, Creation) {
     const auto c{Color(-0.5f, 0.4f, 1.7f)};
     EXPECT_FLOAT_EQ(c.red(), -0.5f);
     EXPECT_FLOAT_EQ(c.green(), 0.4f);
@@ -10,7 +10,7 @@ TEST(ColorTest, Creation) {
 }
 
 
-TEST(ColorTest, Addition) {
+TEST(Color, Addition) {
     const auto c1{Color(0.9f, 0.6f, 0.75f)};
     const auto c2{Color(0.7f, 0.1f, 0.25f)};
     const auto result {c1 + c2};
@@ -19,7 +19,7 @@ TEST(ColorTest, Addition) {
     EXPECT_FLOAT_EQ(result.blue(), 1.0f);
 }
 
-TEST(ColorTest, Subtraction) {
+TEST(Color, Subtraction) {
     const auto c1{Color(0.9f, 0.6f, 0.75f)};
     const auto c2{Color(0.7f, 0.1f, 0.25f)};
     const auto result {c1 - c2};
@@ -28,7 +28,7 @@ TEST(ColorTest, Subtraction) {
     EXPECT_FLOAT_EQ(result.blue(), 0.5f);
 }
 
-TEST(ColorTest, ScalarMultiplication) {
+TEST(Color, ScalarMultiplication) {
     const auto c{Color(0.2f, 0.3f, 0.4f)};
     const auto result {c * 2.0f};
     EXPECT_FLOAT_EQ(result.red(), 0.4f);
@@ -36,7 +36,7 @@ TEST(ColorTest, ScalarMultiplication) {
     EXPECT_FLOAT_EQ(result.blue(), 0.8f);
 }
 
-TEST(ColorTest, HadamardProduct) {
+TEST(Color, HadamardProduct) {
     const auto c1{Color(1.0f, 0.2f, 0.4f)};
     const auto c2{Color(0.9f, 1.0f, 0.1f)};
     const auto result {c1 * c2};

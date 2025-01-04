@@ -3,7 +3,7 @@
 #include "tuple.hpp"
 
 
-TEST(TupleTest, TestCreation) {
+TEST(Tuple, Creation) {
     auto tuple1{ Tuple(2.0f, 1.4f, 3.6f, 1.0f) };
     EXPECT_TRUE(tuple1.isPoint());
     EXPECT_FALSE(tuple1.isVector());
@@ -25,7 +25,7 @@ TEST(TupleTest, TestCreation) {
     EXPECT_TRUE(tuple4.isVector());
 }
 
-TEST(TupleTest, TestAddition) {
+TEST(Tuple, Addition) {
     auto point{ Tuple(2.0f, 1.4f, 3.6f, 1.0f) };
     auto vect{ Tuple(2.0f, 1.4f, 3.6f, 0.0f) };
     EXPECT_TRUE(point == vect);
@@ -38,7 +38,7 @@ TEST(TupleTest, TestAddition) {
     EXPECT_TRUE(actual.isPoint());
 }
 
-TEST(TupleTest, TestSubtraction) {
+TEST(Tuple, Subtraction) {
     auto point{ Tuple(2.0f, 1.4f, 3.6f, 1.0f) };
     auto vect{ Tuple(2.0f, 1.4f, 3.6f, 0.0f) };
 
@@ -56,14 +56,14 @@ TEST(TupleTest, TestSubtraction) {
 }
 
 
-TEST(TupleTest, TestNegation) {
+TEST(Tuple, Negation) {
     auto tuple1{ Tuple(1.0f, -2.0f, 3.0f, -4.0f)};
     auto expected{ Tuple(-1.0f, 2.0f, -3.0f, 4.0f)};
     auto actual{-tuple1};
     EXPECT_TRUE(expected == actual);
 }
 
-TEST(TupleTest, TestScalarMultiplication) {
+TEST(Tuple, ScalarMultiplication) {
     auto t{Tuple(1.0f, -2.0f, 3.0f, -4.0f)};
     auto expected{Tuple(3.5f, -7.0f, 10.5f, -14.0f)};
     float scalar = 3.5f;
@@ -84,7 +84,7 @@ TEST(TupleTest, TestScalarMultiplication) {
     EXPECT_TRUE(result == expected);
 }
 
-TEST(TupleTest, TestScalarDivision) {
+TEST(Tuple, ScalarDivision) {
     auto t{Tuple(1.0f, -2.0f, 3.0f, -4.0f)};
     auto expected{Tuple(0.5f, -1.0f, 1.5f, -2.0f)};
     float scalar = 2.0f;
@@ -96,7 +96,7 @@ TEST(TupleTest, TestScalarDivision) {
     EXPECT_TRUE(result == expected);
 }
 
-TEST(TupleTest, TestMagnitude) {
+TEST(Tuple, Magnitude) {
     auto vect { Tuple::Vector(1.0f, 0.0f, 0.0f)};
     auto magnitude = vect.magnitude();
     EXPECT_FLOAT_EQ(magnitude, 1.0f);
@@ -106,7 +106,7 @@ TEST(TupleTest, TestMagnitude) {
     EXPECT_FLOAT_EQ(magnitude, std::sqrt(14));
 }
 
-TEST(TupleTest, TestNormalization) {
+TEST(Tuple, Normalization) {
     auto vect{Tuple::Vector(4.0f, 0.0f, 0.0f)};
     auto expected{Tuple::Vector(1.0f, 0.0f, 0.0f)};
     auto result{vect.normalize()};
@@ -118,13 +118,13 @@ TEST(TupleTest, TestNormalization) {
     EXPECT_TRUE(expected == result);
 }
 
-TEST(TupleTest, TestDotProduct) {
+TEST(Tuple, DotProduct) {
     auto a = Tuple::Vector(1.0f, 2.0f, 3.0f);
     auto b = Tuple::Vector(2.0f, 3.0f, 4.0f);
     EXPECT_FLOAT_EQ(a.dot(b), 20.0f);
 }
 
-TEST(TupleTest, TestCrossProduct) {
+TEST(Tuple, CrossProduct) {
     auto a = Tuple::Vector(1.0f, 2.0f, 3.0f);
     auto b = Tuple::Vector(2.0f, 3.0f, 4.0f);
     auto expected = Tuple::Vector(-1.0f, 2.0f, -1.0f);

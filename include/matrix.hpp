@@ -1,3 +1,4 @@
+#pragma once
 #include "tuple.hpp"
 #include "utils.hpp"
 #include <array>
@@ -151,7 +152,7 @@ public:
         return m;
     }
 
-    Matrix& operator=(std::initializer_list<T> values) {
+    auto& operator=(std::initializer_list<T> values) {
         if(values.size() > Rows * Cols) {
             throw std::invalid_argument("error: number of values does not match matrix size.");
         }
@@ -212,7 +213,7 @@ public:
     // This ensures that the number of columns in the first matrix is equal to the number of rows in the second matrix
     // and the number of columns in the second matrix can be different but can be known at compile time
     template<unsigned N, numeric U>
-    auto operator*(const Matrix<U, Cols, N>& rhs) const {
+    auto operator*(const Matrix<U, Cols, N>& rhs) const noexcept {
         using ResultType = typename std::common_type<T, U>::type;
         Matrix<ResultType, Rows, N> m;
 
@@ -226,14 +227,20 @@ public:
         return m;
     }
     
-    Tuple operator*(const Tuple& t) const {
-        if(Cols != 4) {
-            throw std::invalid_argument("error: matrix must have 4 columns to multiply with the 4 element tuple");
-        }
-        return Tuple(_data[0][0]*t.x() + _data[0][1]*t.y() + _data[0][2]*t.z() + _data[0][3]*t.w(),
-                     _data[1][0]*t.x() + _data[1][1]*t.y() + _data[1][2]*t.z() + _data[1][3]*t.w(),
-                     _data[2][0]*t.x() + _data[2][1]*t.y() + _data[2][2]*t.z() + _data[2][3]*t.w(),
-                     _data[3][0]*t.x() + _data[3][1]*t.y() + _data[3][2]*t.z() + _data[3][3]*t.w());
-    }
 };
 
+template<numeric T>
+Tuple operator*(const Tuple& t, const Matrix<T,4,4> m) noexcept {
+    return Tuple( m[0][0]*t.x() + m[1][0]*t.y() + m[2][0]*t.z() + m[3][0]*t.w(),
+                  m[0][1]*t.x() + m[1][1]*t.y() + m[2][1]*t.z() + m[3][1]*t.w(),
+                  m[0][2]*t.x() + m[1][2]*t.y() + m[2][2]*t.z() + m[3][2]*t.w(),
+                  m[0][3]*t.x() + m[1][3]*t.y() + m[2][3]*t.z() + m[3][3]*t.w());
+}
+
+template<numeric T>
+Tuple operator*(const Matrix<T,4,4> m, const Tuple& t) noexcept {
+    return Tuple( m[0][0]*t.x() + m[0][1]*t.y() + m[0][2]*t.z() + m[0][3]*t.w(),
+                  m[1][0]*t.x() + m[1][1]*t.y() + m[1][2]*t.z() + m[1][3]*t.w(),
+                  m[2][0]*t.x() + m[2][1]*t.y() + m[2][2]*t.z() + m[2][3]*t.w(),
+                  m[3][0]*t.x() + m[3][1]*t.y() + m[3][2]*t.z() + m[3][3]*t.w());
+}

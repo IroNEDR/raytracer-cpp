@@ -7,7 +7,7 @@
 
 
 
-TEST(CanvasTest, Creation) {
+TEST(Canvas, Creation) {
     auto canvas { Canvas(10, 20)};
     auto w = canvas.width();
     auto h = canvas.height();
@@ -23,7 +23,7 @@ TEST(CanvasTest, Creation) {
 }
 
 
-TEST(CanvasTest, WritePixel) {
+TEST(Canvas, WritePixel) {
     auto canvas { Canvas(10, 20)};
     auto red { Color(1.0f, 0.0f, 0.0f)};
     canvas.write_pixel(2, 3, red);
@@ -32,7 +32,7 @@ TEST(CanvasTest, WritePixel) {
 }
 
 
-TEST(CanvasTest, ToPPM) {
+TEST(Canvas, ToPPM) {
     auto canvas { Canvas(5, 3)};
     auto expected_ppm_header = "P3\n5 3\n255\n";
     std::string line;
@@ -48,7 +48,7 @@ TEST(CanvasTest, ToPPM) {
     EXPECT_EQ(ppm_header, expected_ppm_header);
 }
 
-TEST(CanvasTest, PPMClamping) {
+TEST(Canvas, PPMClamping) {
     auto canvas { Canvas(5, 3)};
     auto c1 {Color(1.5f, 0, 0)};
     auto c2 {Color(0, 0.5f, 0)};
@@ -79,7 +79,7 @@ TEST(CanvasTest, PPMClamping) {
 
 }
 
-TEST(CanvasTest, PPMMaxLineLength) {
+TEST(Canvas, PPMMaxLineLength) {
     auto c { Canvas(10, 2)};
     auto color { Color(1.0f, 0.8f, 0.6f)};
     for(int i = 0; i < 10; ++i) {
@@ -109,7 +109,7 @@ TEST(CanvasTest, PPMMaxLineLength) {
     EXPECT_EQ(ppm_body, expected_ppm_body);
 }
 
-TEST(CanvasTest, PPMEndsWithNewLine) {
+TEST(Canvas, PPMEndsWithNewLine) {
     auto c { Canvas(5, 3)};
     auto ppm {c.to_ppm()};
     EXPECT_EQ(ppm.back(), '\n');

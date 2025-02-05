@@ -19,6 +19,7 @@ add_library(canvas src/canvas.cpp include/canvas.hpp)
 add_library(matrix INTERFACE include/matrix.hpp)
 add_library(transform src/transform.cpp include/transform.hpp)
 add_library(ray src/ray.cpp include/ray.hpp)
+add_library(intersection INTERFACE include/intersection.hpp)
 add_library(sphere src/sphere.cpp include/sphere.hpp)
 
 add_executable(rt_default apps/default/main.cpp)

@@ -8,8 +8,10 @@ TEST(Sphere, TwoPointIntersection) {
     const auto s = Sphere(Tuple::Point(0.0f, 0.0f, 0.0f), 1.0f);
     const auto xs = s.intersections(r);
     ASSERT_EQ(xs.size(), 2);
-    EXPECT_FLOAT_EQ(xs[0], 4.0f);
-    EXPECT_FLOAT_EQ(xs[1], 6.0f);
+    EXPECT_FLOAT_EQ(xs[0].t, 4.0f);
+    EXPECT_FLOAT_EQ(xs[1].t, 6.0f);
+    EXPECT_TRUE(xs[0].obj == s);
+    EXPECT_EQ(xs[1].obj, s);
 }
 
 TEST(Sphere, OnePointIntersection) {
@@ -17,8 +19,10 @@ TEST(Sphere, OnePointIntersection) {
     const auto s = Sphere(Tuple::Point(0.0f, 0.0f, 0.0f), 1.0f);
     const auto xs = s.intersections(r);
     ASSERT_EQ(xs.size(), 2);
-    EXPECT_FLOAT_EQ(xs[0], 5.0f);
-    EXPECT_FLOAT_EQ(xs[1], 5.0f);
+    EXPECT_FLOAT_EQ(xs[0].t, 5.0f);
+    EXPECT_FLOAT_EQ(xs[1].t, 5.0f);
+    EXPECT_EQ(xs[0].obj, s);
+    EXPECT_EQ(xs[1].obj, s);
 }
 
 TEST(Sphere, NoIntersection) {
@@ -33,8 +37,10 @@ TEST(Sphere, InsideIntersection) {
     const auto s = Sphere(Tuple::Point(0.0f, 0.0f, 0.0f), 1.0f);
     const auto xs = s.intersections(r);
     ASSERT_EQ(xs.size(), 2);
-    EXPECT_FLOAT_EQ(xs[0], -1.0f);
-    EXPECT_FLOAT_EQ(xs[1], 1.0f);
+    EXPECT_FLOAT_EQ(xs[0].t, -1.0f);
+    EXPECT_FLOAT_EQ(xs[1].t, 1.0f);
+    EXPECT_EQ(xs[0].obj, s);
+    EXPECT_EQ(xs[1].obj, s);
 }
 
 TEST(Sphere, BehindRayIntersection) {
@@ -42,6 +48,8 @@ TEST(Sphere, BehindRayIntersection) {
     const auto s = Sphere(Tuple::Point(0.0f, 0.0f, 0.0f), 1.0f);
     const auto xs = s.intersections(r);
     ASSERT_EQ(xs.size(), 2);
-    EXPECT_FLOAT_EQ(xs[0], -6.0f);
-    EXPECT_FLOAT_EQ(xs[1], -4.0f);
+    EXPECT_FLOAT_EQ(xs[0].t, -6.0f);
+    EXPECT_FLOAT_EQ(xs[1].t, -4.0f);
+    EXPECT_EQ(xs[0].obj, s);
+    EXPECT_EQ(xs[1].obj, s);
 }

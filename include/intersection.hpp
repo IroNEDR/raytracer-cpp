@@ -2,13 +2,22 @@
 #include <algorithm>
 #include <format>
 #include <initializer_list>
+#include <iostream>
 #include <stdexcept>
+#include <utility>
 #include <vector>
 
 template <typename T>
 struct Intersection {
     float t;
-    T obj;
+    T obj; 
+    bool operator==(const Intersection<T>& rhs) {
+        return t == rhs.t && obj == rhs.obj;
+    }
+
+    void print() const {
+        std::cout << "t: " << t << "\n";
+    }
 };
 
 
@@ -20,7 +29,6 @@ private:
 
 public:
     
-    Intersections() = default;
 
     Intersections(std::initializer_list<Intersection<T>> data):_data(data) {
         sort();
@@ -42,18 +50,17 @@ public:
     }
 
 
-    Intersection<T> hit(std::vector<Intersection<T>> intersections) {
-        if(!sorted) {
-            sort();
-        }
-        Intersection<T> hit;
-        for (auto i : intersections) {
+    std::pair<Intersection<T>, bool> hit() const {
+        auto hit = Intersection<T> {0, T{}};
+        bool found = false;
+        for (auto i : _data) {
             if (i.t > 0) {
                 hit = i;
+                found = true;
                 break;
             }
         }
-        return hit;
+        return {hit, found};
     }
 
     size_t size() const{

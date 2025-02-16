@@ -11,6 +11,8 @@ private:
     float _radius;
 
 public:
+    // default constructor for unit sphere
+    Sphere():_origin(Tuple(0,0,0,0)), _radius(1){};
     Sphere(Tuple origin, float radius):_origin(origin), _radius(radius){};
     Intersections<Sphere> intersections(Ray ray) const;
     Tuple origin() const { return _origin; }
